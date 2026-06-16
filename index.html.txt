@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мед Карпатський | Натуральний мед зі Східниці</title>
+    <style>
+        /* Базові налаштування */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #fdfbf7; color: #3e2723; line-height: 1.6; }
+
+        /* Колірна палітра: Медовий та хвойний (Карпати) */
+        :root {
+            --primary-color: #e59400; 
+            --secondary-color: #b36b00; 
+            --dark-color: #2c1a14; 
+            --forest-green: #2d4a22; /* Колір лісу зі Східниці */
+            --light-color: #f4eee1; 
+        }
+
+        /* Шапка сайту */
+        header {
+            background-color: var(--dark-color);
+            color: var(--primary-color);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        header h1 { font-size: 1.5rem; letter-spacing: 1px; color: #fff; display: flex; align-items: center; gap: 10px;}
+        header h1 span { color: var(--primary-color); }
+        
+        nav ul { list-style: none; display: flex; gap: 20px; }
+        nav ul li a { color: #fff; text-decoration: none; font-weight: bold; transition: color 0.3s; }
+        nav ul li a:hover { color: var(--primary-color); }
+
+        /* Головний екран */
+        .hero {
+            /* Тимчасове фото гір, ви зможете замінити його на своє фото пасічника */
+            background: linear-gradient(rgba(44, 26, 20, 0.7), rgba(44, 26, 20, 0.7)), url('photo_2026-06-16_21-56-29.jpg') center/cover;
+            height: 80vh;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; color: #fff; padding: 0 20px;
+        }
+        .hero h2 { font-size: 3.5rem; color: var(--primary-color); margin-bottom: 10px; }
+        .hero p { font-size: 1.3rem; margin-bottom: 30px; max-width: 700px; }
+
+        .btn {
+            padding: 12px 30px; background-color: var(--primary-color); color: #fff; text-decoration: none; font-weight: bold; font-size: 1.1rem; border-radius: 30px; border: none; cursor: pointer; transition: 0.3s;
+        }
+        .btn:hover { background-color: var(--secondary-color); transform: scale(1.05); }
+
+        /* Розділ "Про нас" */
+        .features { display: flex; justify-content: center; flex-wrap: wrap; padding: 50px 5%; background-color: var(--forest-green); color: white; text-align: center; gap: 30px;}
+        .feature-box { flex: 1; min-width: 250px; max-width: 350px; padding: 20px; border: 1px solid rgba(255,255,255,0.2); border-radius: 10px;}
+        .feature-box h3 { color: var(--primary-color); margin-bottom: 10px; font-size: 1.3rem;}
+
+        /* Розділ товарів */
+        .products-section { padding: 70px 5%; text-align: center; }
+        .products-section h2 { font-size: 2.5rem; margin-bottom: 40px; color: var(--forest-green); }
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; }
+
+        .product-card { background: #fff; border-radius: 15px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.08); transition: 0.3s; border: 1px solid #eee; text-align: left;}
+        .product-card:hover { transform: translateY(-10px); box-shadow: 0 10px 20px rgba(0,0,0,0.12); }
+        .product-card img { width: 100%; height: 280px; object-fit: cover; }
+        .product-info { padding: 25px; }
+        .product-info h3 { margin-bottom: 10px; color: var(--forest-green); font-size: 1.5rem;}
+        .price { font-size: 1.4rem; font-weight: bold; color: var(--primary-color); margin: 15px 0; }
+        .btn-order { display: block; width: 100%; text-align: center; }
+
+        /* Підвал сайту */
+        footer { background-color: var(--dark-color); color: #fff; text-align: center; padding: 40px 20px; }
+        footer p { margin: 10px 0; font-size: 1.1rem;}
+        footer a { color: var(--primary-color); text-decoration: none; font-weight: bold;}
+
+        /* ВІКНО ЗАМОВЛЕННЯ (Модальне вікно) */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center;
+        }
+        .modal-box {
+            background: #fff; padding: 30px; border-radius: 15px; width: 90%; max-width: 400px; text-align: center; position: relative;
+        }
+        .close-btn { position: absolute; top: 15px; right: 20px; font-size: 1.5rem; cursor: pointer; color: #888; }
+        .modal-box h3 { color: var(--forest-green); margin-bottom: 20px; }
+        .form-group { margin-bottom: 15px; text-align: left; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 0.9rem;}
+        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem;}
+        .messenger-btns { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+        .btn-viber { background-color: #7360f2; color: white; padding: 10px; border-radius: 8px; text-decoration: none; font-weight: bold;}
+        .btn-telegram { background-color: #0088cc; color: white; padding: 10px; border-radius: 8px; text-decoration: none; font-weight: bold;}
+
+        @media (max-width: 768px) {
+            header { flex-direction: column; gap: 15px; }
+            .hero h2 { font-size: 2.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🏔️ Мед <span>Карпатський</span></h1>
+        <nav>
+            <ul>
+                <li><a href="#about">Про пасіку</a></li>
+                <li><a href="#products">Асортимент</a></li>
+                <li><a href="#contacts">Контакти</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h2>Справжній Карпатський Мед</h2>
+        <p>Зібраний бджолами у чистому гірському лісі поблизу курорту Східниця. <br>Відчуйте смак та силу карпатської природи у кожній банці.</p>
+        <a href="#products" class="btn">Обрати мед</a>
+    </section>
+
+    <section id="about" class="features">
+        <div class="feature-box">
+            <h3>🌲 Екологічно чистий</h3>
+            <p>Пасіка знаходиться глибоко в горах, далеко від міст, трас та заводів.</p>
+        </div>
+        <div class="feature-box">
+            <h3>🍯 Унікальні сорти</h3>
+            <p>Ми збираємо рідкісний падевий, лісовий та малиновий мед, багатий на мікроелементи.</p>
+        </div>
+        <div class="feature-box">
+            <h3>🐝 Власна справа</h3>
+            <p>Працюємо без посередників. Гарантуємо 100% натуральність продукту.</p>
+        </div>
+    </section>
+
+    <section id="products" class="products-section">
+        <h2>Наш Асортимент</h2>
+        <div class="products-grid">
+            
+            <div class="product-card">
+                <img src="photo_2026-06-16_21-56-20.jpg">
+                <div class="product-info">
+                    <h3>Лісовий мед</h3>
+                    <p>Зібраний з дикорослих лісових квітів та різнотрав'я Карпат. Має насичений, злегка терпкий смак та глибокий аромат лісу.</p>
+                    <div class="price">150 грн/літр</div>
+                    <button class="btn btn-order" onclick="openModal('Лісовий мед')">Замовити</button>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <img src="photo_2026-06-16_21-56-22.jpg">
+                <div class="product-info">
+                    <h3>Малиновий мед</h3>
+                    <p>Дуже рідкісний сорт нектару з квітів дикої лісової малини. Ніжний на смак, світлий, ідеальний засіб при застудах.</p>
+                    <div class="price">не має в наявност</div>
+                    <button class="btn btn-order" onclick="openModal('Малиновий мед')">Замовити</button>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <img src="photo_2026-06-16_21-56-26.jpg">
+                <div class="product-info">
+                    <h3>Падевий мед</h3>
+                    <p>Елітний гірський мед темного кольору. Бджоли збирають його з хвої та листя дерев. Містить у рази більше корисних мінералів.</p>
+                    <div class="price">не має в наявності</div>
+                    <button class="btn btn-order" onclick="openModal('Падевий мед')">Замовити</button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <footer id="contacts">
+        <h2>Контакти та Замовлення</h2>
+        <p>📞 Телефон: <strong><a href="tel:+380674941157" style="color:white">+38 (067) 494-11-57</a></strong></p>
+        <p>📸 Instagram: <strong><a href="https://instagram.com/med_karpatskiy" target="_blank">@med_karpatskiy</a></strong></p>
+        <p>📍 Локація пасіки: Карпати, район Східниці</p>
+        <p>📦 Доставка по всій Україні (Нова Пошта, Укрпошта)</p>
+        <br>
+        <p style="font-size: 0.9rem; color: #aaa;">&copy; 2026 Мед Карпатський.</p>
+    </footer>
+
+    <div class="modal-overlay" id="orderModal">
+        <div class="modal-box">
+            <span class="close-btn" onclick="closeModal()">×</span>
+            <h3>Оформлення замовлення</h3>
+            <p id="selectedProductText" style="margin-bottom: 15px; font-weight: bold; color: var(--primary-color);"></p>
+            
+            <div class="form-group">
+                <label>Ваше ім'я:</label>
+                <input type="text" id="clientName" placeholder="Наприклад, Олена">
+            </div>
+            <div class="form-group">
+                <label>Об'єм та кількість:</label>
+                <input type="text" id="clientQty" placeholder="Напр: 1 літр, або 2 банки по 0.5">
+            </div>
+
+            <p style="font-size: 0.9rem; color: #555; margin-bottom: 10px;">Куди вам зручніше відправити замовлення?</p>
+            
+            <div class="messenger-btns">
+                <a href="#" class="btn-viber" onclick="sendToMessenger('viber')">Відправити у Viber</a>
+                <a href="#" class="btn-telegram" onclick="sendToMessenger('telegram')">Відправити у Telegram</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentProduct = "";
+        const phoneNumber = "380674941157"; // Ваш номер телефону
+
+        function openModal(productName) {
+            currentProduct = productName;
+            document.getElementById('selectedProductText').innerText = "Товар: " + productName;
+            document.getElementById('orderModal').style.display = "flex";
+        }
+
+        function closeModal() {
+            document.getElementById('orderModal').style.display = "none";
+        }
+
+        function sendToMessenger(messenger) {
+            let name = document.getElementById('clientName').value;
+            let qty = document.getElementById('clientQty').value;
+            
+            if(!name || !qty) {
+                alert("Будь ласка, введіть ім'я та кількість!");
+                return;
+            }
+
+            // Формуємо текст повідомлення
+            let text = `Вітаю! Хочу замовити мед.%0A%0A🍯 Товар: ${currentProduct}%0A📦 Кількість: ${qty}%0A👤 Ім'я: ${name}%0A%0AЧекаю на відповідь щодо ціни та доставки.`;
+
+            let link = "";
+            if(messenger === 'viber') {
+                // Універсальне посилання для Viber
+                link = `viber://chat?number=%2B${phoneNumber}&draft=${text}`;
+            } else if (messenger === 'telegram') {
+                // Щоб працював Телеграм, туди найкраще вставляти username. Якщо його немає, відкриваємо просто чат, клієнт сам надішле вам
+                link = `https://t.me/+${phoneNumber}?text=${text}`;
+            }
+
+            // Відкриваємо месенджер
+            window.location.href = link;
+            closeModal();
+        }
+    </script>
+</body>
+</html>
